@@ -1,5 +1,7 @@
 <?php
 
+require dirname(__FILE__).DIRECTORY_SEPARATOR.'creds.php';
+
 function resellerclubhosting_ConfigOptions() {
 
 	# Should return an array of the module options for each product - maximum of 24
