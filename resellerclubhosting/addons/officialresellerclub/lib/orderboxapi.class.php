@@ -12,7 +12,7 @@
             $this->auth_params = array('auth-userid'=>$resellerid, 'auth-password'=>$password);
         }
         
-        public function call( $method , $path , $params = array() , &$response_headers = array() ) {
+        public function api( $method , $path , $params = array() , &$response_headers = array() ) {
             
             $url = ORDERBOX_HTTP_API_BASEURL . ltrim( $path , '/' );
             $query_params = empty( $params ) ? $this->auth_params : array_merge( $params , $this->auth_params );
