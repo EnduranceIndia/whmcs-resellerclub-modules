@@ -514,13 +514,9 @@ function _get_control_panel_link( $params ) {
     
     if( $error == '' ) {
         // generate authentication token
-        // TODO :: remove this piece of code 
-        // this is to test from localhost
-        if( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ) {
-            $ip = '59.162.86.164';
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
+
+	  $ip = $_SERVER['REMOTE_ADDR'];
+	 
         $authentication_token_result = $orderbox->api( 'GET' , '/customers/generate-token.json' , array( 'username' => $params['clientsdetails']['email'] , 'passwd' => $resellerclub_customer_password , 'ip' => $ip ) , $response );
         if( is_array( $authentication_token_result ) && array_key_exists( 'status', $authentication_token_result ) && strtolower( $authentication_token_result['status'] ) == 'error' ) {
             //TODO :: Handle error here
@@ -532,10 +528,8 @@ function _get_control_panel_link( $params ) {
         // generate login link
         // input : reseller branded url, authentication token, order ID
         return $control_panel_url = "http://" . $reseller_branding_url . "/servlet/ManageServiceServletForAPI?auth-token={$authentication_token}&orderid={$order_id}";
-        //return "<input type='button' name='custom_control_panel_login' value='Login to Control Panel' onclick='javascript:window.open(\"{$control_panel_url}\")' />";
-//        return "<input type='button' name='custom_control_panel_login' value='Login to Control Panel' target='_blank' href='' />";
+
     } else {
-//        return "<input type='button' name='custom_control_panel_login' value='Login to Control Panel' onclick='javascript:alert(\"{$error}\");' />";
         throw new Exception( $error );
     }
 }
@@ -551,31 +545,7 @@ function _get_plan_details( $plan_name ) {
     $plan_details['id'] = trim( array_pop( $plan_name_pieces ) );
     $plan_details['name'] = trim( implode( '-' , $plan_name_pieces) );
     return $plan_details;
-    
-//    $plan_details['type'] = trim( substr( $plan_name, 0, strpos( $plan_name , "-" ) ) );
-//    $plan_details['id'] = trim( substr( $plan_name, strrpos( $plan_name , "-" ) + 1 ) );
-//    $plan_details['name'] = trim( substr( $plan_name, strpos( $plan_name , "-" ) + 1, strrpos( $plan_name , "-" )  - strpos( $plan_name , "-" ) - 1 ) );
-//    return $plan_details;
-    
-//    $plan_name_pieces = explode( '-', $plan_name );
-//    foreach( $plan_name_pieces as $key => &$val ) {
-////        $val = trim($val);
-//        if( $key == 0 ) {
-//            $plan_details['type'] = strtolower( $val );
-//        } else if( $key == ( count($plan_name_pieces) - 1 ) ) {
-//            $plan_details['id'] = $val;
-//        }
-//        else {
-//            $plan_details['name'] .= $val . '-';
-//        }
-////        switch ( $key ) {
-////            case 0: $plan_details['type'] = strtolower( $val ); break;
-////            case 1: $plan_details['name'] = $val; break;
-////            case 2: $plan_details['id'] = $val; break;
-////            default: break;
-////        }
-//    }
-//    return $plan_details;
+
 }
 
 function _get_order_details( $user_id , $service_id , $domain , $product_id ) {
