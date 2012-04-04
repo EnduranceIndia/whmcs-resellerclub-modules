@@ -25,7 +25,7 @@ if( file_exists( $addon_module_file_path) ) {
  */
 
 global $orderbox;
-$orderbox =  new orderboxapi( $resellerclub_config['resellerid'] , $resellerclub_config['password'] );
+$orderbox =  new orderboxapi( $resellerclub_config['resellerid'] , $resellerclub_config['password'] , 'rc-whmcs-resellerclubhosting' );
 
 /**
  * WHMCS provisional module core functions

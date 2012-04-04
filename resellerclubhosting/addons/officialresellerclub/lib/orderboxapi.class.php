@@ -6,10 +6,10 @@
         private $auth_password = '';
         private $auth_params = array(); 
         
-        public function __construct( $resellerid , $password ) {
+        public function __construct( $resellerid , $password , $profiler = 'rc-whmcs' ) {
             $this->auth_resellerid = $resellerid;
             $this->auth_password = $password;
-            $this->auth_params = array('auth-userid'=>$resellerid, 'auth-password'=>$password);
+            $this->auth_params = array('auth-userid'=>$resellerid, 'auth-password'=>$password, 'profiler-ink' => $profiler );
         }
         
         public function api( $method , $path , $params = array() , &$response_headers = array() ) {
