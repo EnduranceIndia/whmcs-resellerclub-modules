@@ -346,8 +346,6 @@ function resellerclubhosting_ClientArea( $params ) {
     }
     
     global $smarty;
-//    $smarty->assign("moduleclientarea", "Module Client Area Main Variable");
-//    $smarty->assign("modulecustombuttonresult", "modulecustombuttonresult");
 
     global $orderbox;
     try {
@@ -376,7 +374,7 @@ function resellerclubhosting_ClientArea( $params ) {
             if( is_array( $order_details ) && array_key_exists( 'status', $order_details ) ) {
                 $status =  strtolower( $order_details['status'] );
                 if( $status  != 'success' ) {
-                    return $order_suspend_result['message'];
+                    return $order_details['message'];
                 }
             }
         }
@@ -389,9 +387,7 @@ function resellerclubhosting_ClientArea( $params ) {
         $cp_url_href = "<a href=\"{$cp_url}\" target=\"_blank\">{$cp_url}</a>";
         $temp_url_href= "<a href=\"{$order_details['tempurl']}\" target=\"_blank\">{$order_details['tempurl']}</a>";
         
-        
         $smarty->assign('mdh_hosting_status'  , $order_details['currentstatus'] );
-//        $smarty->assign('mdh_hosting_control_panel' ,  _display_control_panel_link( $params ) );
         $smarty->assign('mdh_hosting_control_panel' ,  _display_control_panel_form() );
         $smarty->assign('mdh_hosting_temp_url' , $temp_url_href );
         $smarty->assign('mdh_hosting_cp_url' , $cp_url_href );
@@ -402,29 +398,6 @@ function resellerclubhosting_ClientArea( $params ) {
         $smarty->assign('mdh_hosting_dns_2' , $order_details['ns_detail']['1'] );
         $smarty->assign('mdh_hosting_diskspace' , $order_details['space'] == '-1' ? 'Unlimited' : $order_details['space'] );
         $smarty->assign('mdh_hosting_bandwidth' , $order_details['bandwidth'] == '-1' ? 'Unlimited' : $order_details['bandwidth'] );        
-        
-        
-//        $template_vars = array(
-//                                        'mdh_hosting_status'    =>  $order_details['currentstatus'],
-//                                        'mdh_hosting_control_panel'  =>  _display_control_panel_link( $params ),
-//                                        'mdh_hosting_temp_url'  =>  $order_details['tempurl'],
-//                                        'mdh_hosting_cp_url'  =>  $cp_url,
-//                                        'mdh_hosting_cp_username'  =>  $order_details['siteadminusername'],
-//                                        'mdh_hosting_cp_password'  =>  $order_details['siteadminpassword'],
-//                                        'mdh_hosting_ip_address'  =>  $order_details['ipaddress'],
-//                                        'mdh_hosting_dns_1'  =>  $order_details['ns_detail']['0'],
-//                                        'mdh_hosting_dns_2'  =>  $order_details['ns_detail']['1'],
-//                                        'mdh_hosting_diskspace'  =>  $order_details['space'] == '-1' ? 'Unlimited' : $order_details['space'],
-//                                        'mdh_hosting_bandwidth'  =>  $order_details['bandwidth'] == '-1' ? 'Unlimited' : $order_details['bandwidth'],
-//                                    );
-//
-//        extract($template_vars);
-//        ob_start();
-//        include_once 'templates'.DIRECTORY_SEPARATOR.'clientarea.php';
-//        $clientarea_data = ob_get_contents();
-//        ob_end_clean();
-//
-//        return $clientarea_data;
         
     } catch (Exception $e) {
         return $e->getMessage();
@@ -604,11 +577,5 @@ function _display_control_panel_form() {
     $cp_form .= "</form>";
     return $cp_form;
 }
-
-//function _display_error_block( $message ) {
-//    echo "<div style=\"color: #ff0000;\">{$message}</div>";
-//}
-
-
 
 ?>
