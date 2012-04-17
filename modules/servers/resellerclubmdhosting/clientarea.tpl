@@ -3,6 +3,12 @@
     <tbody><tr>
             <td><table width="100%" border="0" cellpadding="10" cellspacing="0">
                     <tbody>
+                        {if $is_processing}
+                        <tr>
+                            <td class="fieldarea" width="150">Status:</td>
+                            <td>{$mdh_hosting_status}</td>
+                        </tr>
+                        {else}
                         <tr>
                             <td class="fieldarea" width="150">Status:</td>
                             <td>{$mdh_hosting_status}</td>
@@ -48,6 +54,7 @@
                             <td class="fieldarea">Plan Bandwidth</td>
                             <td>{$mdh_hosting_bandwidth}</td>
                         </tr>
+                        {/if}
                     </tbody></table></td>
         </tr>
     </tbody></table>
