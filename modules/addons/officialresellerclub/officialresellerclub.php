@@ -27,7 +27,7 @@ function officialresellerclub_activate() {
 function officialresellerclub_deactivate() {
     $module_deactivate_query = "DROP TABLE `".RCLUB_ADDON_DB_TABLE."`";
     $module_deactivate_result = mysql_query($module_deactivate_query);
-    if( $module_activate_result === false ) {
+    if( $module_deactivate_result === false ) {
         return array('status'=> 'error','description'=> mysql_error() );
     } else {
         return array('status'=> 'success','description'=> 'Thank you for using Resellerclub module for WHMCS.' );
@@ -69,8 +69,6 @@ function _show_tab_config_contents( $modulelink ) {
         }
     }
     
-//    $resellerid = isset( $config['resellerid'] ) ? $config['resellerid'] : ( isset( $_POST['resellerid'] ) ? $_POST['resellerid'] : '' );
-//    $password = isset( $config['password'] ) ? $config['password'] : ( isset( $_POST['password'] ) ? $_POST['password'] : '' );
     $resellerid = isset( $config['resellerid'] ) ? $config['resellerid'] : '';
     $password = isset( $config['password'] ) ? $config['password'] : '';
     
@@ -157,7 +155,6 @@ function _check_resellerclub_credentials( $reseller_id , $password ) {
 }
 
 function _display_error_block( $message ) {
-//    echo "<div style=\"color: #ff0000;\">{$message}</div>";
     echo "<div style=\"color: #F00000; height: 25px; width: 400px; text-align:center; background-color:transparent; margin: 10px auto; border: 1px dashed #e00;\">{$message}</div>";
 }
 
