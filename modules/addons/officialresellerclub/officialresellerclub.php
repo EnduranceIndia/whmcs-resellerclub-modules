@@ -9,7 +9,7 @@ function officialresellerclub_config() {
         'name' => 'Official Resellerclub Module',
         'version' => '1.0',
         'author' => 'Resellerclub',
-        'description' => 'An official addon module from Resellerclub for WHMCS to manage all provisional modules for Resellerclub',
+        'description' => 'An official addon module from Resellerclub for WHMCS to manage all provisioning modules for Resellerclub',
         'language'  =>  'english',
     );
 }
@@ -59,7 +59,8 @@ function _show_tab_config_contents( $modulelink ) {
     
     if( is_array( $config ) && isset( $config['resellerid'] ) && strlen( $config['resellerid'] ) > 0 && isset( $config['password'] ) && strlen( $config['password'] ) > 0 ) {
         if( $_POST['action'] != 'saveconfig' ) {
-            $message = "Welcome {$config['resellerid']} !";
+            //$message = "Welcome {$config['resellerid']} !";
+			$message = '';
             _display_success_block( $message );
         }
     } else {
