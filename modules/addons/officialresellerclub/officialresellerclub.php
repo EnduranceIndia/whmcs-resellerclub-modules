@@ -1,17 +1,17 @@
 <?php
+
 require dirname(__FILE__).DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'orderboxapi.class.php';
 
-define( 'RCLUB_ADDON_DB_TABLE' , 'mod_resellerclub');
+define('RCLUB_ADDON_DB_TABLE' , 'mod_resellerclub');
 
 function officialresellerclub_config() {
-    $config_details = array(
-                    'name' => 'Official Resellerclub Module',
-                    'version' => '1.0',
-                    'author' => 'Resellerclub',
-                    'description' => 'An official addon module from Resellerclub for WHMCS to manage all provisional modules for Resellerclub',
-                    'language'  =>  'english',
-            );
-    return $config_details;
+    return array(
+        'name' => 'Official Resellerclub Module',
+        'version' => '1.0',
+        'author' => 'Resellerclub',
+        'description' => 'An official addon module from Resellerclub for WHMCS to manage all provisional modules for Resellerclub',
+        'language'  =>  'english',
+    );
 }
 
 function officialresellerclub_activate() {
