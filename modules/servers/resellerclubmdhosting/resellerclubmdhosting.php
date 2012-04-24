@@ -383,7 +383,7 @@ function resellerclubmdhosting_ClientArea( $params ) {
         $smarty->assign( 'is_processing' , $is_processing );
         
         if( $is_processing ) {
-            $smarty->assign('mdh_hosting_status'  , 'Your order is being ...' );
+            $smarty->assign('mdh_hosting_status'  , 'Your order is being processed ...');
         } else {
             if( 'windows' == $plan_pieces['type'] ) {
                 $cp_url = 'http://' . $order_details['ipaddress'] . ':8880';
@@ -554,10 +554,10 @@ function _display_control_panel_link( $params ) {
     
     try {
         $control_panel_url = _get_control_panel_link( $params );
-        return "<input type='button' name='custom_control_panel_login' value='Login to control panel' onclick='javascript:window.open(\"{$control_panel_url}\")' />";
+        return "<input type='button' name='custom_control_panel_login' value='Login to Control Panel' onclick='javascript:window.open(\"{$control_panel_url}\")' />";
     } catch (Exception $e) {
         $error_message = $e->getMessage();
-        return "<input type='button' name='custom_control_panel_login' value='Login to control panel' onclick='javascript:alert(\"{$error_message}\");' />";
+        return "<input type='button' name='custom_control_panel_login' value='Login to Control Panel' onclick='javascript:alert(\"{$error_message}\");' />";
     }
     
 }
@@ -569,7 +569,8 @@ function _redirect_to_control_panel( $params ) {
 }
 
 function _display_control_panel_form() {
-    $cp_form = "<form method=\"post\" action=\"/clientarea.php?action=productdetails\" target=\"_blank\">";
+    $form_action_url = $_SERVER['REQUEST_URI'];
+    $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";	
     $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"true\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Login to Control Panel\">";

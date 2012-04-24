@@ -38,7 +38,7 @@ $orderbox =  new orderboxapi( $resellerclub_config['resellerid'] , $resellerclub
 function resellerclubsdhosting_ConfigOptions() {
     
     global $orderbox;
-    $mdh_plan_names = array();
+    $hosting_plan_names = array();
     
     $plans = $orderbox->api( 'GET', '/products/plan-details.json' );
     
@@ -537,7 +537,8 @@ function  _redirect_to_webmail_control_panel( $params ) {
 }
 
 function _display_webhosting_panel_form() {
-    $cp_form = "<form method=\"post\" action=\"/clientarea.php?action=productdetails\" target=\"_blank\">";
+    $form_action_url = $_SERVER['REQUEST_URI'];
+    $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
     $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"webhost\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Web Hosting\">";
@@ -546,7 +547,8 @@ function _display_webhosting_panel_form() {
 }
 
 function _display_mailhosting_panel_form() {
-    $cp_form = "<form method=\"post\" action=\"/clientarea.php?action=productdetails\" target=\"_blank\">";
+    $form_action_url = $_SERVER['REQUEST_URI'];
+    $cp_form = "<form method=\"post\" action=\"/{$form_action_url}\" target=\"_blank\">";
     $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"mailhost\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Mail Hosting\">";
@@ -555,7 +557,8 @@ function _display_mailhosting_panel_form() {
 }
 
 function _display_dns_panel_form() {
-    $cp_form = "<form method=\"post\" action=\"/clientarea.php?action=productdetails\" target=\"_blank\">";
+    $form_action_url = $_SERVER['REQUEST_URI'];
+    $cp_form = "<form method=\"post\" action=\"/{$form_action_url}\" target=\"_blank\">";
     $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"dns\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Manage DNS\">";
@@ -564,7 +567,8 @@ function _display_dns_panel_form() {
 }
 
 function _display_webmail_panel_form() {
-    $cp_form = "<form method=\"post\" action=\"/clientarea.php?action=productdetails\" target=\"_blank\">";
+    $form_action_url = $_SERVER['REQUEST_URI'];
+    $cp_form = "<form method=\"post\" action=\"/{$form_action_url}\" target=\"_blank\">";
     $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"webmail\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Web mail\">";
