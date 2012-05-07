@@ -146,7 +146,7 @@ function _save_config_details() {
 }
 
 function _check_resellerclub_credentials( $reseller_id , $password ) {
-    $orderbox =  new orderboxapi( $reseller_id , $password );
+    $orderbox =  new orderboxapi( $reseller_id , htmlspecialchars_decode($password) );
     $reseller_details = $orderbox->api( 'GET' , '/resellers/details.json' , array( ) , $response );
     if( is_array($reseller_details) && strtolower( $reseller_details['status'] ) == 'error' ) {
         return false;
