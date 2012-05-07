@@ -114,7 +114,7 @@ function resellerclubmdhosting_CreateAccount( $params ) {
                                             'serviceusername' => ' ' ,
                                             'servicepassword' => ' ',
                                          );
-            $clear_cpanel_auth_details = localAPI( 'updateclientproduct', $local_api_values , 'admin' );
+            $clear_cpanel_auth_details = localAPI( 'updateclientproduct', $local_api_values );
         }
         
         return 'success';
@@ -527,7 +527,7 @@ function _get_order_details( $user_id , $service_id , $domain , $product_id ) {
                                         'domain' => $domain , 
                                         'pid' => $product_id 
                                      );
-        $client_order_details = localAPI( 'getclientsproducts', $local_api_values , 'admin' );
+        $client_order_details = localAPI( 'getclientsproducts', $local_api_values );
         
         return $client_order_details;
 }
