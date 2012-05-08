@@ -60,8 +60,8 @@ function _show_tab_config_contents( $modulelink ) {
     if( is_array( $config ) && isset( $config['resellerid'] ) && strlen( $config['resellerid'] ) > 0 && isset( $config['password'] ) && strlen( $config['password'] ) > 0 ) {
         if( $_POST['action'] != 'saveconfig' ) {
             //$message = "Welcome {$config['resellerid']} !";
-			$message = '';
-            _display_success_block( $message );
+			//$message = '';
+            //_display_success_block( $message );
         }
     } else {
         if( $_POST['action'] != 'saveconfig' ) {
@@ -102,40 +102,43 @@ function _get_config_details_from_db( ) {
 }
 
 function _save_config_details() {
+
+    $reseller_id = $_POST['resellerid'];
+    $password = htmlspecialchars_decode( $_POST['password'] );
+
     $config = _get_config_details_from_db();
 
     if( is_array( $config ) && count( $config ) > 0 ) {
-        $reseller_id = mysql_real_escape_string( $_POST['resellerid'] );
-        $password = mysql_real_escape_string( $_POST['password'] );
-        
-        if( _check_resellerclub_credentials( $_POST['resellerid'] , $_POST['password'] ) ) { 
+		if( _check_resellerclub_credentials( $reseller_id , $password ) ) {
             $sql_update_config_details_resellerid = "UPDATE `".RCLUB_ADDON_DB_TABLE."` SET value = '{$reseller_id}' WHERE config = 'resellerid'";
             $update_resellerid_res = mysql_query( $sql_update_config_details_resellerid );
             if( $update_resellerid_res == false ) {
                 throw new Exception( mysql_error() );
             }
+            $password = mysql_real_escape_string( $password );
             $sql_update_config_details_password = "UPDATE `".RCLUB_ADDON_DB_TABLE."` SET value = '{$password}' WHERE config = 'password'";
             $update_password_res = mysql_query( $sql_update_config_details_password );
             if( $update_password_res == false ) {
                 throw new Exception( mysql_error() );
             }
         } else {
-            $message = "Invalid credentials ( {$_POST['resellerid']}/ *** ) ";
+            $message = "Incorrect credentials ( {$reseller_id}/ *** )";
             _display_error_block( $message );
             return false;
         }
     } else {
-        if( strlen( trim($_POST['resellerid'] ) ) == 0 || strlen( trim($_POST['password'] ) ) == 0 ) {
+        if( strlen( trim( $reseller_id ) ) == 0 || strlen( trim( $password ) ) == 0 ) {
             return false;
         }
-        else if( _check_resellerclub_credentials( $_POST['resellerid'] , $_POST['password'] ) ) {
-            $sql_insert_config_details = "INSERT INTO `".RCLUB_ADDON_DB_TABLE."` ( config, value ) VALUES ( 'resellerid' , '{$_POST['resellerid']}'), ( 'password' , '{$_POST['password']}')";
+        else if( _check_resellerclub_credentials( $reseller_id , $password ) ) {
+            $password = mysql_real_escape_string( $password );
+            $sql_insert_config_details = "INSERT INTO `".RCLUB_ADDON_DB_TABLE."` ( config, value ) VALUES ( 'resellerid' , '{$reseller_id}'), ( 'password' , '{$password}')";
             $insert_res = mysql_query( $sql_insert_config_details );
             if( $insert_res == false ) {
                 throw new Exception( mysql_error() );
             }
         } else {
-            $message = "Invalid credentials ({$_POST['resellerid']}/ *** ) ";
+            $message = "Invalid credentials ({$reseller_id}/ *** ) ";
             _display_error_block( $message );
             return false;
         }
@@ -146,12 +149,13 @@ function _save_config_details() {
 }
 
 function _check_resellerclub_credentials( $reseller_id , $password ) {
-    $orderbox =  new orderboxapi( $reseller_id , htmlspecialchars_decode($password) );
+    $orderbox =  new orderboxapi( $reseller_id , $password );
     $reseller_details = $orderbox->api( 'GET' , '/resellers/details.json' , array( ) , $response );
-    if( is_array($reseller_details) && strtolower( $reseller_details['status'] ) == 'error' ) {
-        return false;
-    } else {
+
+    if( is_array($reseller_details) && array_key_exists('resellerid',$reseller_details) && $reseller_details['resellerid'] == $reseller_id  ) {
         return true;
+    } else {
+        return false;
     }
 }
 
