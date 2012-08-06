@@ -9,6 +9,7 @@
 
 * resellerclubmdhosting ( Resellerclub Multi Domain Hosting )
 * resellerclubsdhosting ( Resellerclub Webservices )
+* resellerclubresellerhosting ( Resellerclub Reseller Hosting )
 
 ###Installtion Steps
 
@@ -21,7 +22,7 @@
 - Activate `Official Resellerclub Module`.
 - Allow `Full Administrator` access to `Official Resellerclub Module`.
 - Go to Addons > Official Resellerclub Module
-- Enter you Reseller id and Reseller password. 
+- Enter your Reseller id and Reseller password. 
 
 #### Start using provisioning modules
 - Create a product under a product group.
