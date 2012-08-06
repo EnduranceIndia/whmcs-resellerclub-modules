@@ -570,8 +570,9 @@ function _redirect_to_control_panel( $params ) {
 
 function _display_control_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";	
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"true\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Login to Control Panel\">";
     $cp_form .= "</form>";

@@ -538,8 +538,9 @@ function  _redirect_to_webmail_control_panel( $params ) {
 
 function _display_webhosting_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"webhost\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Web Hosting\">";
     $cp_form .= "</form>";
@@ -548,8 +549,9 @@ function _display_webhosting_panel_form() {
 
 function _display_mailhosting_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"mailhost\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Mail Hosting\">";
     $cp_form .= "</form>";
@@ -558,8 +560,9 @@ function _display_mailhosting_panel_form() {
 
 function _display_dns_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"dns\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Manage DNS\">";
     $cp_form .= "</form>";
@@ -568,8 +571,9 @@ function _display_dns_panel_form() {
 
 function _display_webmail_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"webmail\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Web mail\">";
     $cp_form .= "</form>";

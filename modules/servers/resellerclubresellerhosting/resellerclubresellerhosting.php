@@ -49,8 +49,17 @@ function resellerclubresellerhosting_ConfigOptions() {
         }
     }
     
+    if( array_key_exists( 'resellerwindowshosting', $plans )  ) {
+        $windows_plans = $plans['resellerwindowshosting'];
+        foreach ( $windows_plans as $plan_id => $plan ) {
+            $resellerhosting_plan_names[] = 'Windows ' . ' - ' . $plan['plan_name'] . ' - ' . $plan_id;
+        }
+    }
+
     return array(
-        "Hosting Plan" => array( "Type" => "dropdown", "Options" => implode(',', $resellerhosting_plan_names) , "Description" => "Select a hosting plan to associate with this product"),
+            "Hosting Plan" => array( "Type" => "dropdown",
+            "Options" => implode(',', $resellerhosting_plan_names) ,
+            "Description" => "Select a hosting plan to associate with this product"),
     );
 
 }
@@ -284,6 +293,7 @@ function resellerclubresellerhosting_ChangePackage( $params ) {
     global $orderbox;
 
     try {
+        // Get Resellerclub Order ID from domain name
         $plan_pieces = _get_plan_details( $params['configoption1']);
         if( 'windows' == $plan_pieces['type'] ) {
             $api_path = '/resellerhosting/windows/orderid.json';
@@ -296,6 +306,7 @@ function resellerclubresellerhosting_ChangePackage( $params ) {
             return $order_id_result['message'];
         } 
         else {
+            // Get Order Details from Resellerclub
             $order_id = $order_id_result;
             
             if( 'windows' == $plan_pieces['type'] ) {
@@ -308,13 +319,13 @@ function resellerclubresellerhosting_ChangePackage( $params ) {
             $billing_cycle = strtolower( $billing_cycle );
             $months =_get_order_duration_months( $billing_cycle );    
             
-            $order_details = array(  'order-id' => $order_id,
+                $order_params = array(  'order-id' => $order_id,
                                      'new-plan-id' => $plan_pieces['id'],
                                      'months' => $months,
                                      'invoice-option' => 'NoInvoice',
                                 );
 
-            $order_api_result = $orderbox->api( 'POST' , $api_path , $order_details );
+            $order_api_result = $orderbox->api( 'POST' , $api_path , $order_params );
             
             if( is_array( $order_api_result ) && strtolower( $order_api_result['status'] ) == 'error' ) {
                 return $order_api_result['message'];
@@ -670,8 +681,9 @@ function _redirect_to_whm( $params ) {
 
 function _display_control_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"true\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Login to Control Panel\">";
     $cp_form .= "</form>";
@@ -680,8 +692,9 @@ function _display_control_panel_form() {
 
 function _display_webhosting_panel_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"webhost\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Web Hosting\">";
     $cp_form .= "</form>";
@@ -690,8 +703,9 @@ function _display_webhosting_panel_form() {
 
 function _display_whm_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
+    $id = isset( $_GET['id'] ) ? $_GET['id'] : (  isset( $_POST['id'] ) ? $_POST['id'] : '' );
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"whm\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"WHM\">";
     $cp_form .= "</form>";
@@ -701,7 +715,7 @@ function _display_whm_form() {
 function _display_whmcs_license_form() {
     $form_action_url = $_SERVER['REQUEST_URI'];
     $cp_form = "<form method=\"post\" action=\"{$form_action_url}\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $_POST['id'] ."\">";
+    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"". $id ."\">";
     $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"whmcs_license\">";
     $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Generate WHMCS License\">";
     $cp_form .= "</form>";
