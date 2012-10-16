@@ -57,11 +57,7 @@
                         <tr>
                             <td class="fieldarea">Allocated mail space:</td>
                             <td>{$sdh_allocated_mailspace}</td>
-                        </tr>                        
-                        <tr>
-                            <td class="fieldarea">POP accounts count:</td>
-                            <td>{$sdh_mailpop}</td>
-                        </tr>
+                        </tr> 
                         {/if}
                     </tbody></table></td>
         </tr>
