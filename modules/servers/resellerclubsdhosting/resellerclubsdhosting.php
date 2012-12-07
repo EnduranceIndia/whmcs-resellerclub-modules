@@ -415,7 +415,9 @@ function _get_control_panel_link( $params ) {
     if( is_array($client_details) && strtolower( $client_details['status'] ) == 'error' ) {
         $error = "Customer ({$params['clientsdetails']['email']}) not found at Resellerclub";
     } else {
-        $resellerclub_customer_password = $client_details['password'];
+        $customer_id = $client_details['customerid'];
+        $customer_temp_password = $orderbox->api( 'GET' , '/customers/temp-password.json' , array( 'customer-id' => $customer_id ) , $response );
+        $resellerclub_customer_password = $customer_temp_password;
     }
     
     if( $error == '' ) {
