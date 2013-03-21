@@ -5,8 +5,12 @@
             <td class="fieldarea"><input type="text" size="15" name="resellerid" value="<?php echo $resellerid; ?>" autocomplete="off"></td>
         </tr>
         <tr>
-            <td class="fieldlabel">Reseller Password</td>
-            <td class="fieldarea"><input type="password" size="15" name="password" value="<?php echo $password; ?>" autocomplete="off"></td>
+            <td class="fieldlabel">Reseller Key</td>
+            <td class="fieldarea"><input type="text" size="45" name="apikey" value="<?php echo $apikey; ?>" autocomplete="off"></td>
+        </tr>
+        <tr>
+            <td class="fieldlabel">Enable Logging</td>
+            <td class="fieldarea"><input type="checkbox" name="enable_log" autocomplete="off" value="1" <?php echo $enable_log_checked_text; ?>></td>
         </tr>
         <tr>
             <td class="fieldlabel">

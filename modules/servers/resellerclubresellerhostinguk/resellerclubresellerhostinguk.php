@@ -1,7 +1,7 @@
 <?php
 
 /**
- * WHMCS Module for Resellerclub's Single Domain Hosting - India ( Linux / Windows )
+ * WHMCS Module for Resellerclub's Reseller Hosting - UK ( Linux / Windows )
  */
 // AddOn Module Name
 define('ADDON_MODULE_NAME', 'officialresellerclub');
@@ -27,60 +27,51 @@ if (file_exists($addon_module_file_path)) {
  *  Initialize OrderboxAPI object
  */
 global $orderbox;
-$orderbox = new orderboxapi($resellerclub_config['resellerid'], $resellerclub_config['apikey'], $resellerclub_config['enable_log'], 'rc-whmcs-resellerclubsdhosting-in');
+$orderbox = new orderboxapi($resellerclub_config['resellerid'], $resellerclub_config['apikey'], $resellerclub_config['enable_log'], 'rc-whmcs-resellerclubresellerhosting-uk');
 
 /**
  * WHMCS provisional module core functions
  */
-function resellerclubsdhostingin_ConfigOptions() {
+function resellerclubresellerhostinguk_ConfigOptions() {
 
     global $orderbox;
     $hosting_plan_names = array();
-    $active_products = $orderbox->api('GET', '/products/category-keys-mapping.json', array(), $response, 'resellerclubsdhostingin', 'configoptions');
+    $active_products = $orderbox->api('GET', '/products/category-keys-mapping.json', array(), $response, 'resellerclubresellerhostinguk', 'configoptions');
 
-    if (in_array('singledomainhostinglinuxin', $active_products['hosting']) || in_array('singledomainhostingwindowsin', $active_products['hosting'])) {
-        $plans = $orderbox->api('GET', '/products/plan-details.json', array(), $response, 'resellerclubsdhostingin', 'configoptions');
+    if (in_array('resellerhostinglinuxuk', $active_products['hosting']) || in_array('resellerwindowshostinguk', $active_products['hosting'])) {
+        $plans = $orderbox->api('GET', '/products/plan-details.json', array(), $response, 'resellerclubresellerhostinguk', 'configoptions');
 
-        if (array_key_exists('singledomainhostinglinuxin', $plans) && in_array('singledomainhostinglinuxin', $active_products['hosting'])) {
-            $hosting_plans = $plans['singledomainhostinglinuxin'];
+        if (array_key_exists('resellerhostinglinuxuk', $plans) && in_array('resellerhostinglinuxuk', $active_products['hosting'])) {
+            $hosting_plans = $plans['resellerhostinglinuxuk'];
             foreach ($hosting_plans as $plan_id => $plan) {
-                if ('Active' == $plan['status']) {
-                    $hosting_plan_names[] = 'Linux ' . ' - ' . $plan['plan_name'] . ' - ' . $plan_id;
-                }
+                $hosting_plan_names[] = 'Linux ' . ' - ' . $plan['plan_name'] . ' - ' . $plan_id;
             }
         }
-        if (array_key_exists('singledomainhostingwindowsin', $plans) && in_array('singledomainhostingwindowsin', $active_products['hosting'])) {
-            $hosting_plans = $plans['singledomainhostingwindowsin'];
+        if (array_key_exists('resellerwindowshostinguk', $plans) && in_array('resellerwindowshostinguk', $active_products['hosting'])) {
+            $hosting_plans = $plans['resellerwindowshostinguk'];
             foreach ($hosting_plans as $plan_id => $plan) {
-                if ('Active' == $plan['status']) {
-                    $hosting_plan_names[] = 'Windows ' . ' - ' . $plan['plan_name'] . ' - ' . $plan_id;
-                }
+                $hosting_plan_names[] = 'Windows ' . ' - ' . $plan['plan_name'] . ' - ' . $plan_id;
             }
         }
-        if (empty($hosting_plan_names)) {
-            $configarray = array(
-                "Hosting Plan" => array("Description" => "No plans active for selected module")
-            );
-        } else {
-            $configarray = array(
-                "Hosting Plan" => array("Type" => "dropdown", "Options" => implode(',', $hosting_plan_names), "Description" => "Select a hosting plan to associate with this product")
-            );
-        }
+
+        $configarray = array(
+            "Hosting Plan" => array("Type" => "dropdown", "Options" => implode(',', $hosting_plan_names), "Description" => "Select a hosting plan to associate with this product"),
+        );
     } else {
         $configarray = array(
-            "Hosting Plan" => array("Description" => "No plans active for selected module")
+            "Hosting Plan" => array("Description" => "No plans active for selected module"),
         );
     }
 
     return $configarray;
 }
 
-function resellerclubsdhostingin_CreateAccount($params) {
+function resellerclubresellerhostinguk_CreateAccount($params) {
 
     global $orderbox;
 
     try {
-        $client_details = $orderbox->api('GET', '/customers/details.json', array('username' => $params['clientsdetails']['email']), $response, 'resellerclubsdhostingin', 'create');
+        $client_details = $orderbox->api('GET', '/customers/details.json', array('username' => $params['clientsdetails']['email']), $response, 'resellerclubresellerhostinguk', 'create');
 
         if (is_array($client_details) && strtolower($client_details['status']) == 'error') {
             $resellerclub_customer_id = _createCustomer($params);
@@ -99,17 +90,16 @@ function resellerclubsdhostingin_CreateAccount($params) {
             'customer-id' => $resellerclub_customer_id,
             'months' => $months,
             'invoice-option' => 'NoInvoice',
-            'plan-id' => $plan_pieces['id'],
-            'enable-ssl' => true,
+            'plan-id' => $plan_pieces['id']
         );
 
         if ('windows' == $plan_pieces['type']) {
-            $api_path_order_add = '/singledomainhosting/windows/in/add.json';
+            $api_path_order_add = '/resellerhosting/windows/uk/add.json';
         } else {
-            $api_path_order_add = '/singledomainhosting/linux/in/add.json';
+            $api_path_order_add = '/resellerhosting/linux/uk/add.json';
         }
 
-        $order_api_result = $orderbox->api('POST', $api_path_order_add, $order_details, $response, 'resellerclubsdhostingin', 'create');
+        $order_api_result = $orderbox->api('POST', $api_path_order_add, $order_details, $response, 'resellerclubresellerhostinguk', 'create');
 
         if (is_array($order_api_result) && strtolower($order_api_result['status']) == 'error') {
             return $order_api_result['message'];
@@ -132,31 +122,31 @@ function resellerclubsdhostingin_CreateAccount($params) {
 
         return 'success';
     } catch (Exception $e) {
-        logModuleCall('resellerclubsdhostingin', 'create', 'unknown', 'Exception : ' . $e->getMessage());
+        logModuleCall('resellerclubresellerhostinguk', 'create', 'unknown', 'Exception : ' . $e->getMessage());
         return "Customer sign up error - " . $e->getMessage();
     }
 }
 
-function resellerclubsdhostingin_SuspendAccount($params) {
+function resellerclubresellerhostinguk_SuspendAccount($params) {
 
     global $orderbox;
 
     try {
         $plan_pieces = _get_plan_details($params['configoption1']);
         if ('windows' == $plan_pieces['type']) {
-            $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
+            $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
         } else {
-            $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
+            $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
         }
 
-        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'suspend');
+        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'suspend');
 
         if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
             return $order_id_result['message'];
         } else {
             $order_id = $order_id_result;
 
-            $order_suspend_result = $orderbox->api('POST', '/orders/suspend.json', array('order-id' => $order_id, 'reason' => $params['suspendreason']), $response, 'resellerclubsdhostingin', 'suspend');
+            $order_suspend_result = $orderbox->api('POST', '/orders/suspend.json', array('order-id' => $order_id, 'reason' => $params['suspendreason']), $response, 'resellerclubresellerhostinguk', 'suspend');
 
             if (is_array($order_suspend_result) && array_key_exists('status', $order_suspend_result)) {
                 $status = strtolower($order_suspend_result['status']);
@@ -168,31 +158,31 @@ function resellerclubsdhostingin_SuspendAccount($params) {
             }
         }
     } catch (Exception $e) {
-        logModuleCall('resellerclubsdhostingin', 'suspend', 'unknown', 'Exception : ' . $e->getMessage());
+        logModuleCall('resellerclubresellerhostinguk', 'suspend', 'unknown', 'Exception : ' . $e->getMessage());
         return "Order suspend error - " . $e->getMessage();
     }
 }
 
-function resellerclubsdhostingin_UnsuspendAccount($params) {
+function resellerclubresellerhostinguk_UnsuspendAccount($params) {
 
     global $orderbox;
 
     try {
         $plan_pieces = _get_plan_details($params['configoption1']);
         if ('windows' == $plan_pieces['type']) {
-            $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
+            $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
         } else {
-            $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
+            $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
         }
 
-        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'unsuspend');
+        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'unsuspend');
 
         if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
             return $order_id_result['message'];
         } else {
             $order_id = $order_id_result;
 
-            $order_unsuspend_result = $orderbox->api('POST', '/orders/unsuspend.json', array('order-id' => $order_id), $response, 'resellerclubsdhostingin', 'unsuspend');
+            $order_unsuspend_result = $orderbox->api('POST', '/orders/unsuspend.json', array('order-id' => $order_id), $response, 'resellerclubresellerhostinguk', 'unsuspend');
 
             if (is_array($order_unsuspend_result) && array_key_exists('status', $order_unsuspend_result)) {
                 $status = strtolower($order_unsuspend_result['status']);
@@ -204,12 +194,12 @@ function resellerclubsdhostingin_UnsuspendAccount($params) {
             }
         }
     } catch (Exception $e) {
-        logModuleCall('resellerclubsdhostingin', 'unsuspend', 'unknown', 'Exception : ' . $e->getMessage());
+        logModuleCall('resellerclubresellerhostinguk', 'unsuspend', 'unknown', 'Exception : ' . $e->getMessage());
         return "Order unsuspend error - " . $e->getMessage();
     }
 }
 
-function resellerclubsdhostingin_TerminateAccount($params) {
+function resellerclubresellerhostinguk_TerminateAccount($params) {
 
     global $orderbox;
 
@@ -217,21 +207,21 @@ function resellerclubsdhostingin_TerminateAccount($params) {
 
         $plan_pieces = _get_plan_details($params['configoption1']);
         if ('windows' == $plan_pieces['type']) {
-            $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
-            $api_path_order_delete = '/singledomainhosting/windows/in/delete.json';
+            $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
+            $api_path_order_delete = '/resellerhosting/windows/uk/delete.json';
         } else {
-            $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
-            $api_path_order_delete = '/singledomainhosting/linux/in/delete.json';
+            $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
+            $api_path_order_delete = '/resellerhosting/linux/uk/delete.json';
         }
 
 
-        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'terminate');
+        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'terminate');
 
         if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
             return $order_id_result['message'];
         } else {
             $order_id = $order_id_result;
-            $order_delete_result = $orderbox->api('POST', $api_path_order_delete, array('order-id' => $order_id), $response, 'resellerclubsdhostingin', 'terminate');
+            $order_delete_result = $orderbox->api('POST', $api_path_order_delete, array('order-id' => $order_id), $response, 'resellerclubresellerhostinguk', 'terminate');
 
             if (is_array($order_delete_result) && array_key_exists('status', $order_delete_result)) {
                 $status = strtolower($order_delete_result['status']);
@@ -247,21 +237,21 @@ function resellerclubsdhostingin_TerminateAccount($params) {
     }
 }
 
-function resellerclubsdhostingin_Renew($params) {
+function resellerclubresellerhostinguk_Renew($params) {
 
     global $orderbox;
 
     try {
         $plan_pieces = _get_plan_details($params['configoption1']);
         if ('windows' == $plan_pieces['type']) {
-            $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
-            $api_path_order_renew = '/singledomainhosting/windows/in/renew.json';
+            $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
+            $api_path_order_renew = '/resellerhosting/windows/uk/renew.json';
         } else {
-            $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
-            $api_path_order_renew = '/singledomainhosting/linux/in/renew.json';
+            $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
+            $api_path_order_renew = '/resellerhosting/linux/uk/renew.json';
         }
 
-        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'renew');
+        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'renew');
 
         if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
             return $order_id_result['message'];
@@ -274,11 +264,10 @@ function resellerclubsdhostingin_Renew($params) {
 
             $order_details = array('order-id' => $order_id,
                 'months' => $months,
-                'invoice-option' => 'NoInvoice',
-                'enable-ssl' => true,
+                'invoice-option' => 'NoInvoice'
             );
 
-            $order_api_result = $orderbox->api('POST', $api_path_order_renew, $order_details, $response, 'resellerclubsdhostingin', 'renew');
+            $order_api_result = $orderbox->api('POST', $api_path_order_renew, $order_details, $response, 'resellerclubresellerhostinguk', 'renew');
 
             if (is_array($order_api_result) && strtolower($order_api_result['status']) == 'error') {
                 return $order_api_result['message'];
@@ -291,10 +280,10 @@ function resellerclubsdhostingin_Renew($params) {
     }
 }
 
-function resellerclubsdhostingin_manualrenew($params) {
+function resellerclubresellerhostinguk_manualrenew($params) {
 
     //Renew the order
-    $renew_result = resellerclubsdhostingin_Renew($params);
+    $renew_result = resellerclubresellerhostinguk_Renew($params);
 
     if ($renew_result == "success") {
         // Get order details
@@ -338,21 +327,20 @@ function resellerclubsdhostingin_manualrenew($params) {
     return $renew_result;
 }
 
-function resellerclubsdhostingin_ChangePackage($params) {
-
+function resellerclubresellerhostinguk_ChangePackage($params) {
     global $orderbox;
 
     try {
 
         $plan_pieces = _get_plan_details($params['configoption1']);
         if ('windows' == $plan_pieces['type']) {
-            $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
-            $api_path_order_modify = '/singledomainhosting/windows/in/modify.json';
+            $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
+            $api_path_order_modify = '/resellerhosting/windows/uk/modify.json';
         } else {
-            $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
-            $api_path_order_modify = '/singledomainhosting/linux/in/modify.json';
+            $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
+            $api_path_order_modify = '/resellerhosting/linux/uk/modify.json';
         }
-        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'changepackage');
+        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'changepackage');
 
         if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
             return $order_id_result['message'];
@@ -371,7 +359,7 @@ function resellerclubsdhostingin_ChangePackage($params) {
                 'invoice-option' => 'NoInvoice',
             );
 
-            $order_api_result = $orderbox->api('POST', $api_path_order_modify, $order_details, $response, 'resellerclubsdhostingin', 'changepackage');
+            $order_api_result = $orderbox->api('POST', $api_path_order_modify, $order_details, $response, 'resellerclubresellerhostinguk', 'changepackage');
 
             if (is_array($order_api_result) && strtolower($order_api_result['status']) == 'error') {
                 return $order_api_result['message'];
@@ -383,15 +371,15 @@ function resellerclubsdhostingin_ChangePackage($params) {
     }
 }
 
-function resellerclubsdhostingin_ClientAreaCustomButtonArray() {
+function resellerclubresellerhostinguk_ClientAreaCustomButtonArray() {
     
 }
 
-function resellerclubsdhostingin_AdminCustomButtonArray() {
+function resellerclubresellerhostinguk_AdminCustomButtonArray() {
     return array("Execute Manual Renew" => "manualrenew");
 }
 
-function resellerclubsdhostingin_ClientArea($params) {
+function resellerclubresellerhostinguk_ClientArea($params) {
 
     if (isset($_POST['cplogin']) && strlen(trim($_POST['cplogin'])) > 0) {
         $cplogin_action = strtolower(trim($_POST['cplogin']));
@@ -403,6 +391,10 @@ function resellerclubsdhostingin_ClientArea($params) {
             case 'dns': _redirect_to_dns_control_panel($params);
                 break;
             case 'webmail': _redirect_to_webmail_control_panel($params);
+                break;
+            case 'whm': _redirect_to_whm_control_panel($params);
+                break;
+            case 'whmcs_license': resellerclubresellerhostinguk_GenerateLicense($params);
                 break;
         }
     }
@@ -416,53 +408,66 @@ function resellerclubsdhostingin_ClientArea($params) {
 
         $plan_pieces = _get_plan_details($params['configoption1']);
         if ('windows' == $plan_pieces['type']) {
-            $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
-            $api_path_order_details = '/singledomainhosting/windows/in/details.json';
-            $api_path_dns_details = '/singledomainhosting/windows/in/dns-record.json';
+            $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
+            $api_path_order_details = '/resellerhosting/windows/uk/details.json';
+            $api_path_dns_details = '/resellerhosting/windows/uk/dns-record.json';
         } else {
-            $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
-            $api_path_order_details = '/singledomainhosting/linux/in/details.json';
-            $api_path_dns_details = '/singledomainhosting/linux/in/dns-record.json';
+            $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
+            $api_path_order_details = '/resellerhosting/linux/uk/details.json';
+            $api_path_dns_details = '/resellerhosting/linux/uk/dns-record.json';
         }
 
-        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'clientarea');
+        $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'clientarea');
 
         if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
             $is_processing = true;
         } else {
             $order_id = $order_id_result;
-            $order_details = $orderbox->api('GET', $api_path_order_details, array('order-id' => $order_id), $response, 'resellerclubsdhostingin', 'clientarea');
-            $order_dns_details = $orderbox->api('GET', $api_path_dns_details, array('order-id' => $order_id), $response, 'resellerclubsdhostingin', 'clientarea');
+            $order_details = $orderbox->api('GET', $api_path_order_details, array('order-id' => $order_id), $response, 'resellerclubresellerhostinguk', 'clientarea');
+            $order_dns_details = $orderbox->api('GET', $api_path_dns_details, array('order-id' => $order_id), $response, 'resellerclubresellerhostinguk', 'clientarea');
         }
 
         $smarty->assign('is_processing', $is_processing);
 
         if ($is_processing) {
-            $smarty->assign('sdh_status', 'Processing...');
+            $smarty->assign('rh_status', 'Processing...');
         } else {
             if ('windows' == $plan_pieces['type']) {
                 $cp_url = 'http://' . $order_details['ipaddress'] . ':8880';
             } else {
                 $cp_url = 'http://' . $order_details['ipaddress'] . '/cpanel';
+                $plans = $orderbox->api('GET', '/products/plan-details.json', array(), $response, 'resellerclubresellerhostinguk', 'clientarea');
             }
             $cp_url_href = "<a href=\"{$cp_url}\" target=\"_blank\">{$cp_url}</a>";
             $temp_url_href = "<a href=\"{$order_details['tempurl']}\" target=\"_blank\">{$order_details['tempurl']}</a>";
 
-            $smarty->assign('sdh_status', $order_details['currentstatus']);
-            $smarty->assign('sdh_webhosting_panel', _display_webhosting_panel_form());
-            $smarty->assign('sdh_mailhosting_panel', _display_mailhosting_panel_form());
-            $smarty->assign('sdh_dns_panel', _display_dns_panel_form());
-            $smarty->assign('sdh_webmail_panel', _display_webmail_panel_form());
-            $smarty->assign('sdh_temp_url', $temp_url_href);
-            $smarty->assign('sdh_cp_url', $cp_url_href);
-            $smarty->assign('sdh_cp_username', $order_details['siteadminusername']);
-            $smarty->assign('sdh_cp_password', $order_details['siteadminpassword']);
-            $smarty->assign('sdh_ip_address', $order_details['ipaddress']);
-            $smarty->assign('sdh_mailpop', $order_details['mailpop'] == '-1' ? 'Unlimited' : $order_details['mailpop'] );
-            $smarty->assign('sdh_diskspace', $order_details['webspace'] == '-1' ? 'Unlimited' : $order_details['webspace'] );
-            $smarty->assign('sdh_bandwidth', $order_details['bandwidth'] == '-1' ? 'Unlimited' : $order_details['bandwidth'] );
-            $smarty->assign('sdh_allocated_mailspace', $order_details['mailspace'] == '-1' ? 'Unlimited' : $order_details['mailspace'] . " GB" );
-            $smarty->assign('nameservers', $order_details['nameserver']);
+            $smarty->assign('rh_status', $order_details['currentstatus']);
+            $smarty->assign('rh_webhosting_panel', _display_webhosting_panel_form());
+            if ('linux' == $plan_pieces['type']) {
+                $smarty->assign('rh_whm_panel', _display_whm_panel_form());
+            }
+            $smarty->assign('rh_mailhosting_panel', _display_mailhosting_panel_form());
+            $smarty->assign('rh_dns_panel', _display_dns_panel_form());
+            $smarty->assign('rh_webmail_panel', _display_webmail_panel_form());
+            $smarty->assign('rh_temp_url', $temp_url_href);
+            $smarty->assign('rh_cp_url', $cp_url_href);
+            $smarty->assign('rh_cp_username', $order_details['siteadminusername']);
+            $smarty->assign('rh_cp_password', $order_details['siteadminpassword']);
+            $smarty->assign('rh_ip_address', $order_details['ipaddress']);
+            if ($plans['resellerhostinglinuxuk'][$plan_pieces['id']]['includes_whmcs'] == true) {
+                if ($order_details['licenseKey']) {
+                    $smarty->assign('rh_whmcs_license_key', $order_details['licenseKey']);                    
+                } else {
+                    $smarty->assign('rh_whmcs_license_key', _display_whmcs_license_form());
+                }
+            } else {
+                $smarty->assign('rh_whmcs_license_key', '');
+            }
+            $smarty->assign('rh_mailpop', $order_details['mailpop'] == '-1' ? 'Unlimited' : $order_details['mailpop'] );
+            $smarty->assign('rh_diskspace', $order_details['space'] == '-1' ? 'Unlimited' : $order_details['space'] );
+            $smarty->assign('rh_bandwidth', $order_details['bandwidth'] == '-1' ? 'Unlimited' : $order_details['bandwidth'] );
+            $smarty->assign('rh_allocated_mailspace', $order_details['mailspace'] == '-1' ? 'Unlimited' : $order_details['mailspace'] . " GB" );
+            $smarty->assign('nameservers', $order_details['ns_detail']);
             $smarty->assign('dns_details', $order_dns_details);
         }
     } catch (Exception $e) {
@@ -470,8 +475,41 @@ function resellerclubsdhostingin_ClientArea($params) {
     }
 }
 
-function resellerclubsdhostingin_LoginLink($params) {
+function resellerclubresellerhostinguk_LoginLink($params) {
     echo "<strong>Do Not Modify</strong>" . _display_control_panel_link($params);
+}
+
+function resellerclubresellerhostinguk_GenerateLicense($params) {
+
+    global $orderbox;
+
+    try {
+        $plan_pieces = _get_plan_details($params['configoption1']);
+        if ('windows' == $plan_pieces['type']) {
+            $api_path = '/resellerhosting/windows/uk/orderid.json';
+            $api_path_generate_license_key = '/resellerhosting/windows/uk/generate-license-key.json';
+        } else {
+            $api_path = '/resellerhosting/linux/uk/orderid.json';
+            $api_path_generate_license_key = '/resellerhosting/linux/uk/generate-license-key.json';
+        }
+        $order_id_result = $orderbox->api('GET', $api_path, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'generateLicense');
+
+        if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
+            return $order_id_result['message'];
+        } else {
+            $order_id = $order_id_result;
+            $license_details = $orderbox->api('POST', $api_path_generate_license_key, array('order-id' => $order_id), $response, 'resellerclubresellerhostinguk', 'generateLicense');
+
+            if (is_array($license_details) && strtolower($license_details['status']) == 'error') {
+                throw new Exception($license_details['message']);
+            }
+
+            //$license_details['licenseKey']
+            return 'success';
+        }
+    } catch (Exception $e) {
+        return "Generate License error - " . $e->getMessage();
+    }
 }
 
 /**
@@ -500,7 +538,7 @@ if (!function_exists('_createCustomer')) {
             'lang-pref' => 'en'
         );
 
-        $create_customer_result = $orderbox->api('POST', '/customers/signup.json', $customer_details, $response_headers, 'resellerclubsdhostingin', 'create');
+        $create_customer_result = $orderbox->api('POST', '/customers/signup.json', $customer_details, $response_headers, 'resellerclubresellerhostinguk', 'create');
 
         if (is_array($create_customer_result) && strtolower($create_customer_result['status']) == 'error') {
             throw new Exception($create_customer_result['message']);
@@ -517,12 +555,12 @@ if (!function_exists('_get_control_panel_link')) {
         global $orderbox;
         $error = '';
 
-        $client_details = $orderbox->api('GET', '/customers/details.json', array('username' => $params['clientsdetails']['email']), $response, 'resellerclubsdhostingin', 'clientarea');
+        $client_details = $orderbox->api('GET', '/customers/details.json', array('username' => $params['clientsdetails']['email']), $response, 'resellerclubresellerhostinguk', 'clientarea');
         if (is_array($client_details) && strtolower($client_details['status']) == 'error') {
             $error = "Customer ({$params['clientsdetails']['email']}) not found at Resellerclub";
         } else {
             $customer_id = $client_details['customerid'];
-            $customer_temp_password = $orderbox->api('GET', '/customers/temp-password.json', array('customer-id' => $customer_id), $response, 'resellerclubsdhostingin', 'clientarea');
+            $customer_temp_password = $orderbox->api('GET', '/customers/temp-password.json', array('customer-id' => $customer_id), $response, 'resellerclubresellerhostinguk', 'clientarea');
             $resellerclub_customer_password = $customer_temp_password;
         }
 
@@ -530,11 +568,11 @@ if (!function_exists('_get_control_panel_link')) {
             // get orderid from resellerclub
             $plan_pieces = _get_plan_details($params['configoption1']);
             if ('windows' == $plan_pieces['type']) {
-                $api_path_orderid_from_domain = '/singledomainhosting/windows/in/orderid.json';
+                $api_path_orderid_from_domain = '/resellerhosting/windows/uk/orderid.json';
             } else {
-                $api_path_orderid_from_domain = '/singledomainhosting/linux/in/orderid.json';
+                $api_path_orderid_from_domain = '/resellerhosting/linux/uk/orderid.json';
             }
-            $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubsdhostingin', 'clientarea');
+            $order_id_result = $orderbox->api('GET', $api_path_orderid_from_domain, array('domain-name' => $params['domain']), $response, 'resellerclubresellerhostinguk', 'clientarea');
 
             if (is_array($order_id_result) && array_key_exists('status', $order_id_result) && strtolower($order_id_result['status']) == 'error') {
                 $error = "Hosting order ({$params['domain']}) not found at Resellerclub";
@@ -545,7 +583,7 @@ if (!function_exists('_get_control_panel_link')) {
 
         if ($error == '') {
             // get reseller branded url
-            $reseller_details = $orderbox->api('GET', '/resellers/details.json', array(), $response, 'resellerclubsdhostingin', 'clientarea');
+            $reseller_details = $orderbox->api('GET', '/resellers/details.json', array(), $response, 'resellerclubresellerhostinguk', 'clientarea');
             if (is_array($reseller_details) && strtolower($reseller_details['status']) == 'error') {
                 $error = "Reseller not found at Resellerclub";
             } else {
@@ -557,7 +595,7 @@ if (!function_exists('_get_control_panel_link')) {
             // generate authentication token
             $ip = $_SERVER['REMOTE_ADDR'];
 
-            $authentication_token_result = $orderbox->api('GET', '/customers/generate-token.json', array('username' => $params['clientsdetails']['email'], 'passwd' => $resellerclub_customer_password, 'ip' => $ip), $response, 'resellerclubsdhostingin', 'clientarea');
+            $authentication_token_result = $orderbox->api('GET', '/customers/generate-token.json', array('username' => $params['clientsdetails']['email'], 'passwd' => $resellerclub_customer_password, 'ip' => $ip), $response, 'resellerclubresellerhostinguk', 'clientarea');
 
             if (is_array($authentication_token_result) && array_key_exists('status', $authentication_token_result) && strtolower($authentication_token_result['status']) == 'error') {
                 $authentication_token = '';
@@ -690,6 +728,16 @@ if (!function_exists('_redirect_to_webmail_control_panel')) {
 
 }
 
+if (!function_exists('_redirect_to_whm_control_panel')) {
+
+    function _redirect_to_whm_control_panel($params) {
+        $control_panel_url = _get_control_panel_link($params) . '&panel=whm';
+        header("location: " . $control_panel_url);
+        exit;
+    }
+
+}
+
 if (!function_exists('_display_webhosting_panel_form')) {
 
     function _display_webhosting_panel_form() {
@@ -744,6 +792,36 @@ if (!function_exists('_display_webmail_panel_form')) {
         $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\">";
         $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"webmail\">";
         $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Web mail\">";
+        $cp_form .= "</form>";
+        return $cp_form;
+    }
+
+}
+
+if (!function_exists('_display_whm_panel_form')) {
+
+    function _display_whm_panel_form() {
+        $form_action_url = $_SERVER['REQUEST_URI'];
+        $id = isset($_GET['id']) ? $_GET['id'] : ( isset($_POST['id']) ? $_POST['id'] : '' );
+        $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
+        $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\">";
+        $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"whm\">";
+        $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"WHM\">";
+        $cp_form .= "</form>";
+        return $cp_form;
+    }
+
+}
+
+if (!function_exists('_display_whmcs_license_form')) {
+
+    function _display_whmcs_license_form() {
+        $form_action_url = $_SERVER['REQUEST_URI'];
+        $id = isset($_GET['id']) ? $_GET['id'] : ( isset($_POST['id']) ? $_POST['id'] : '' );
+        $cp_form = "<form method=\"post\" action=\"{$form_action_url}\">";
+        $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\">";
+        $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"whmcs_license\">";
+        $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Generate WHMCS License\">";
         $cp_form .= "</form>";
         return $cp_form;
     }
