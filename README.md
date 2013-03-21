@@ -4,12 +4,15 @@
 
 2 types of modules for WHMCS
 
-1. AddOn Module (<strong>Required<strong>)
-2. Provisioning Modules
+###### 1. Addon Module (<strong>Required<strong>)
 
-* resellerclubmdhosting ( Resellerclub Multi Domain Hosting )
-* resellerclubsdhosting ( Resellerclub Webservices )
-* resellerclubresellerhosting ( Resellerclub Reseller Hosting )
+- officialresellerclub
+
+###### 2. Provisioning Modules
+
+* resellerclubmdhostingXX ( Resellerclub Multi Domain Hosting - XX = us/uk/in )
+* resellerclubsdhostingXX ( Resellerclub Single Domain Hosting - XX = us/uk/in )
+* resellerclubresellerhostingXX ( Resellerclub Reseller Hosting - XX = us/uk/in )
 
 ###Installtion Steps
 
@@ -22,8 +25,8 @@
 - Activate `Official Resellerclub Module`.
 - Allow `Full Administrator` access to `Official Resellerclub Module`.
 - Go to Addons > Official Resellerclub Module
-- Enter your Reseller id and Reseller password. 
-
+- Enter your Reseller id and API key. 
+ 
 #### Start using provisioning modules
 - Create a product under a product group.
 - Select appropriate resellerclub provisioning module on the Modules tab.
