@@ -1,3 +1,7 @@
+Please register your email address over here: http://www.resellerclub.com/selling-options/whmcs incase you haven't already.
+
+This will help us in keeping you posted with any updates related to our WHMCS modules.
+
 # ResellerClub Product Modules for WHMCS
 
 ###Overview
