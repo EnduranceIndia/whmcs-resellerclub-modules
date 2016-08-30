@@ -14,9 +14,12 @@ This will help us in keeping you posted with any updates related to our WHMCS mo
 
 ###### 2. Provisioning Modules
 
-* resellerclubmdhostingXX ( Resellerclub Multi Domain Hosting - XX = us/uk/in )
-* resellerclubsdhostingXX ( Resellerclub Single Domain Hosting - XX = us/uk/in )
-* resellerclubresellerhostingXX ( Resellerclub Reseller Hosting - XX = us/uk/in )
+* resellerclubmdhostingXX ( Resellerclub Multi Domain Hosting - XX = us/uk/in/hk )
+* resellerclubsdhostingXX ( Resellerclub Single Domain Hosting - XX = us/uk/in/hk )
+* resellerclubresellerhostingXX ( Resellerclub Reseller Hosting - XX = us/uk/in/hk )
+* resellerclubssl ( Resellerclub SSL Certificate )
+* resellerclubvpsXX ( Resellerclub VPS - XX = us )
+* resellerclubwebservices ( Resellerclub Web Services - Web site Builder and Email, etc )
 
 ###Installtion Steps
 
