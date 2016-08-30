@@ -456,33 +456,36 @@ function resellerclubvpsus_LoginLink($params) {
 /**
  *  Make Orderbox API Calls
  */
-function _createCustomer($params) {
-    global $orderbox;
-    $customer_password = 'qwe' . rand(5000, 10000) . 'dsa';
-    //TODO :: Set phone country code (phone-cc) appropriately
-    $customer_details = array(
-        'username' => $params['clientsdetails']['email'],
-        'passwd' => $customer_password,
-        'name' => $params['clientsdetails']['firstname'] . ' ' . $params['clientsdetails']['lastname'],
-        'company' => strlen(trim($params['clientsdetails']['companyname'])) ? $params['clientsdetails']['companyname'] : '-',
-        'address-line-1' => $params['clientsdetails']['address1'],
-        'address-line-2' => $params['clientsdetails']['address2'],
-        'address-line-3' => '',
-        'city' => $params['clientsdetails']['city'],
-        'state' => $params['clientsdetails']['state'],
-        'country' => $params['clientsdetails']['country'],
-        'zipcode' => $params['clientsdetails']['postcode'],
-        'phone-cc' => '1', //phonenumber - country code
-        'phone' => $params['clientsdetails']['phonenumber'],
-        'lang-pref' => 'en'
-    );
+if (!function_exists('_createCustomer')) {
 
-    $create_customer_result = $orderbox->api('POST', '/customers/signup.json', $customer_details, $response_headers);
-
-    if (is_array($create_customer_result) && strtolower($create_customer_result['status']) == 'error') {
-        throw new Exception($create_customer_result['message']);
+    function _createCustomer($params) {
+        global $orderbox;
+        $customer_password = 'qwe' . rand(5000, 10000) . 'dsa';
+        //TODO :: Set phone country code (phone-cc) appropriately
+        $customer_details = array(
+            'username' => $params['clientsdetails']['email'],
+            'passwd' => $customer_password,
+            'name' => $params['clientsdetails']['firstname'] . ' ' . $params['clientsdetails']['lastname'],
+            'company' => strlen(trim($params['clientsdetails']['companyname'])) ? $params['clientsdetails']['companyname'] : '-',
+            'address-line-1' => $params['clientsdetails']['address1'],
+            'address-line-2' => $params['clientsdetails']['address2'],
+            'address-line-3' => '',
+            'city' => $params['clientsdetails']['city'],
+            'state' => $params['clientsdetails']['state'],
+            'country' => $params['clientsdetails']['country'],
+            'zipcode' => $params['clientsdetails']['postcode'],
+            'phone-cc' => '1', //phonenumber - country code
+            'phone' => $params['clientsdetails']['phonenumber'],
+            'lang-pref' => 'en'
+        );
+    
+        $create_customer_result = $orderbox->api('POST', '/customers/signup.json', $customer_details, $response_headers);
+    
+        if (is_array($create_customer_result) && strtolower($create_customer_result['status']) == 'error') {
+            throw new Exception($create_customer_result['message']);
+        }
+        return $create_customer_result;
     }
-    return $create_customer_result;
 }
 
 if( !function_exists('_get_control_panel_link') ) {
@@ -604,34 +607,37 @@ if (!function_exists('_get_order_duration_months')) {
 
 }
 
-function _display_control_panel_link($params) {
-
-    try {
-        $control_panel_url = _get_control_panel_link($params);
-        return "<input type='button' name='custom_control_panel_login' value='Login to control panel' onclick='javascript:window.open(\"{$control_panel_url}\")' />";
-    } catch (Exception $e) {
-        $error_message = $e->getMessage();
-        return "<input type='button' name='custom_control_panel_login' value='Login to control panel' onclick='javascript:alert(\"{$error_message}\");' />";
+if (!function_exists('_display_control_panel_link')) {
+    function _display_control_panel_link($params) {
+        try {
+            $control_panel_url = _get_control_panel_link($params);
+            return "<input type='button' name='custom_control_panel_login' value='Login to control panel' onclick='javascript:window.open(\"{$control_panel_url}\")' />";
+        } catch (Exception $e) {
+            $error_message = $e->getMessage();
+            return "<input type='button' name='custom_control_panel_login' value='Login to control panel' onclick='javascript:alert(\"{$error_message}\");' />";
+        }
     }
 }
 
-function _redirect_to_webhosting_control_panel($params) {
-    $control_panel_url = _get_control_panel_link($params) . '&service-name=webhosting';
-    header("location: " . $control_panel_url);
-    exit;
+if (!function_exists('_redirect_to_webhosting_control_panel')) {
+    function _redirect_to_webhosting_control_panel($params) {
+        $control_panel_url = _get_control_panel_link($params) . '&service-name=webhosting';
+        header("location: " . $control_panel_url);
+        exit;
+    }
 }
 
-
-function _display_webhosting_panel_form() {
-    $form_action_url = $_SERVER['REQUEST_URI'];
-    $id = isset($_GET['id']) ? $_GET['id'] : ( isset($_POST['id']) ? $_POST['id'] : '' );
-    $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
-    $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\">";
-    $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"cpanel\">";
-    $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Cpanel Login\">";
-    $cp_form .= "</form>";
-    return $cp_form;
+if (!function_exists('_display_webhosting_panel_form')) {
+    function _display_webhosting_panel_form() {
+        $form_action_url = $_SERVER['REQUEST_URI'];
+        $id = isset($_GET['id']) ? $_GET['id'] : ( isset($_POST['id']) ? $_POST['id'] : '' );
+        $cp_form = "<form method=\"post\" action=\"{$form_action_url}\" target=\"_blank\">";
+        $cp_form .= "<input type=\"hidden\" name=\"id\" value=\"" . $id . "\">";
+        $cp_form .= "<input type=\"hidden\" name=\"cplogin\" value=\"cpanel\">";
+        $cp_form .= "<input type=\"submit\" name=\"btn_cplogin\" value=\"Cpanel Login\">";
+        $cp_form .= "</form>";
+        return $cp_form;
+    }
 }
-
 
 ?>
