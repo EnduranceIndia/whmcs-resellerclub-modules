@@ -564,6 +564,7 @@ if (!function_exists('_get_plan_details')) {
 
 }
 
+if( !function_exists('_get_order_details') ) {
 function _get_order_details($user_id, $service_id, $domain, $product_id) {
     $local_api_values = array(
         'clientid' => $user_id,
@@ -574,6 +575,7 @@ function _get_order_details($user_id, $service_id, $domain, $product_id) {
     $client_order_details = localAPI('getclientsproducts', $local_api_values);
 
     return $client_order_details;
+}
 }
 
 if (!function_exists('_get_order_billing_cycle')) {
